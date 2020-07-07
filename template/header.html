@@ -2,6 +2,7 @@
 {{define "header" -}}
 <html>
 	<head>
+		<link rel="stylesheet" href="/css/universal.css" />
 		<title>
 			{{- if .title -}}
 				{{.title}}
@@ -9,7 +10,7 @@
 				Gredelston Dot Cool
 			{{- end -}}
 		</title>
+		{{template "navbar"}}
 	</head>
 	<body>{{/* Corresponding </body> tag can be found in footer.html. */}}
-		{{template "navbar"}}
 {{- end}}

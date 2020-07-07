@@ -49,5 +49,7 @@ func main() {
 	router.GET("/about", About)
 	router.GET("/hello/:name", Hello)
 
+	router.ServeFiles("/css/*filepath", http.Dir("static/css"))
+
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

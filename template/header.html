@@ -1,3 +1,4 @@
+{{/* Standard header, expected to be used at the start of any page. */}}
 {{define "header" -}}
 <html>
 	<head>
@@ -9,6 +10,6 @@
 			{{- end -}}
 		</title>
 	</head>
-	<body>
+	<body>{{/* Corresponding </body> tag can be found in footer.html. */}}
 		{{template "navbar"}}
 {{- end}}

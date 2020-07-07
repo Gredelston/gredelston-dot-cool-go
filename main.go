@@ -18,6 +18,7 @@ const (
 	// Page-specific template filepaths
 	aboutTFP = "template/about.html"
 	indexTFP = "template/index.html"
+	textTFP = "template/text.html"
 )
 
 func renderPage(fp string, w http.ResponseWriter, data map[string]string) {
@@ -32,7 +33,10 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	renderPage(aboutTFP, w, map[string]string{"title": "About Me"})
+	renderPage(textTFP, w, map[string]string{
+		"title": "About Me",
+		"body": `My name is Greg. I'm a software developer in Boulder, Colorado.`,
+	})
 }
 
 func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

@@ -20,16 +20,23 @@ const (
 	textTFP = "template/text.html"
 )
 
+// Generic struct containing data needed by renderPage.
 type pageData struct {
+	// Title is the title of the page.
+	// Body is used by some templates (e.g. text.html) for the main text body.
 	Title, Body string
+
+	// ExtraStylesheets are page-specific CSS files to be imported.
 	ExtraStylesheets []string
 }
 
+// Generic function to render a specified template (fp) with custom data.
 func renderPage(fp string, w http.ResponseWriter, data pageData) {
 	t := template.Must(template.ParseFiles(fp, headerTFP, footerTFP, navbarTFP))
 	if err := t.Execute(w, data); err != nil { panic(err) }
 }
 
+// GET method to route homepage.
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	renderPage(indexTFP, w, pageData{
 		Title: "Home",
@@ -37,6 +44,7 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	})
 }
 
+// GET method to route "About Me" page.
 func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	renderPage(textTFP, w, pageData{
 		Title: "About Me",
@@ -44,6 +52,7 @@ func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	})
 }
 
+// Main function, handles routing.
 func main() {
 	router := httprouter.New()
 	router.GET("/", Index)

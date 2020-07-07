@@ -19,18 +19,19 @@ const (
 	indexTFP = "template/index.html"
 )
 
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	t := template.Must(template.ParseFiles(indexTFP, headerTFP, footerTFP))
-	if err := t.Execute(w, map[string]string{"title": "Index"}); err != nil {
-		panic(fmt.Errorf("Executing template for / (index): ", err))
+func renderPage(fp string, w http.ResponseWriter, data map[string]string) {
+	t := template.Must(template.ParseFiles(fp, headerTFP, footerTFP))
+	if err := t.Execute(w, data); err != nil {
+		panic(fmt.Errorf("Executing template %q: %w", fp, err))
 	}
 }
 
-func About(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	t := template.Must(template.ParseFiles(aboutTFP, headerTFP, footerTFP))
-	if err := t.Execute(w, map[string]string{"title": "About Me"}); err != nil {
-		panic(fmt.Errorf("Executing template for /about: ", err))
-	}
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	renderPage(indexTFP, w, map[string]string{"title": "Home"})
+}
+
+func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	renderPage(aboutTFP, w, map[string]string{"title": "About Me"})
 }
 
 func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

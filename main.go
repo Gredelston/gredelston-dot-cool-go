@@ -13,6 +13,7 @@ const (
 	// Generic template filepaths
 	headerTFP = "template/header.html"
 	footerTFP = "template/footer.html"
+	navbarTFP = "template/navbar.html"
 
 	// Page-specific template filepaths
 	aboutTFP = "template/about.html"
@@ -20,7 +21,7 @@ const (
 )
 
 func renderPage(fp string, w http.ResponseWriter, data map[string]string) {
-	t := template.Must(template.ParseFiles(fp, headerTFP, footerTFP))
+	t := template.Must(template.ParseFiles(fp, headerTFP, footerTFP, navbarTFP))
 	if err := t.Execute(w, data); err != nil {
 		panic(fmt.Errorf("Executing template %q: %w", fp, err))
 	}

@@ -27,7 +27,8 @@ type pageData struct {
 	Title, Body string
 
 	// ExtraStylesheets are page-specific CSS files to be imported.
-	ExtraStylesheets []string
+	// Keywords are page-specific metadata keywords.
+	ExtraStylesheets, Keywords []string
 }
 
 // Generic function to render a specified template (fp) with custom data.
@@ -49,6 +50,7 @@ func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	renderPage(textTFP, w, pageData{
 		Title: "About Me",
 		Body: `My name is Greg. I'm a software developer in Boulder, Colorado.`,
+		Keywords: []string{"UnderConstruction"},
 	})
 }
 

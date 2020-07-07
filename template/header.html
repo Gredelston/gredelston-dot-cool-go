@@ -7,6 +7,11 @@
 		<meta name="applicaton-name" content="Gredelston Dot Cool">
 		<meta name="description" content="My personal website">
 		<meta name="author" content="Greg Edelston">
+		<meta name="keywords" content="software,developer
+			{{- range .Keywords -}}
+				,{{.}}
+			{{- end -}}
+		">
 
 		<link rel="stylesheet" href="/css/universal.css">
 		{{range .ExtraStylesheets -}}

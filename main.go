@@ -28,9 +28,7 @@ type pageData struct {
 
 func renderPage(fp string, w http.ResponseWriter, data pageData) {
 	t := template.Must(template.ParseFiles(fp, headerTFP, footerTFP, navbarTFP))
-	if err := t.Execute(w, data); err != nil {
-		panic(fmt.Errorf("Executing template %q: %w", fp, err))
-	}
+	if err := t.Execute(w, data); err != nil { panic(err) }
 }
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

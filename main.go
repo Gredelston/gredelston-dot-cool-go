@@ -21,7 +21,12 @@ const (
 	textTFP = "template/text.html"
 )
 
-func renderPage(fp string, w http.ResponseWriter, data map[string]string) {
+type pageData struct {
+	Title, Body string
+	ExtraStylesheets []string
+}
+
+func renderPage(fp string, w http.ResponseWriter, data pageData) {
 	t := template.Must(template.ParseFiles(fp, headerTFP, footerTFP, navbarTFP))
 	if err := t.Execute(w, data); err != nil {
 		panic(fmt.Errorf("Executing template %q: %w", fp, err))
@@ -29,13 +34,16 @@ func renderPage(fp string, w http.ResponseWriter, data map[string]string) {
 }
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	renderPage(indexTFP, w, map[string]string{"title": "Home"})
+	renderPage(indexTFP, w, pageData{
+		Title: "Home",
+		ExtraStylesheets: []string{"/css/index.css"},
+	})
 }
 
 func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	renderPage(textTFP, w, map[string]string{
-		"title": "About Me",
-		"body": `My name is Greg. I'm a software developer in Boulder, Colorado.`,
+	renderPage(textTFP, w, pageData{
+		Title: "About Me",
+		Body: `My name is Greg. I'm a software developer in Boulder, Colorado.`,
 	})
 }
 

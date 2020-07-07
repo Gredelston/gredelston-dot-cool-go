@@ -3,9 +3,12 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="/css/universal.css" />
+		{{range .ExtraStylesheets -}}
+		<link rel="stylesheet" href={{.}}/>
+		{{- end}}
 		<title>
-			{{- if .title -}}
-				{{.title}}
+			{{- if .Title -}}
+				{{.Title}}
 			{{- else -}}
 				Gredelston Dot Cool
 			{{- end -}}

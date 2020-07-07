@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"log"
 
@@ -9,7 +10,15 @@ import (
 )
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprint(w, "Welcome!\n")
+	t, err := template.ParseFiles("template/page.html")
+	if err != nil {
+		fmt.Errorf("Failed to parse files: %w", err)
+		return
+	}
+	data := map[string]string {"body": "Welcome to my website!"}
+	if err = t.Execute(w, data); err != nil {
+		fmt.Errorf("Failed to execute template: ", err)
+	}
 }
 
 func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

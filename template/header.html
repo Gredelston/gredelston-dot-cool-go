@@ -1,11 +1,18 @@
 {{/* Standard header, expected to be used at the start of any page. */}}
 {{define "header" -}}
-<html>
+<!doctype html>
+<html lang="en">
 	<head>
-		<link rel="stylesheet" href="/css/universal.css" />
+		<meta charset="utf-8">
+		<meta name="applicaton-name" content="Gredelston Dot Cool">
+		<meta name="description" content="My personal website">
+		<meta name="author" content="Greg Edelston">
+
+		<link rel="stylesheet" href="/css/universal.css">
 		{{range .ExtraStylesheets -}}
-		<link rel="stylesheet" href={{.}}/>
+		<link rel="stylesheet" href={{.}}>
 		{{- end}}
+
 		<title>
 			{{- if .Title -}}
 				{{.Title}}
@@ -13,6 +20,7 @@
 				Gredelston Dot Cool
 			{{- end -}}
 		</title>
+
 		{{template "navbar"}}
 	</head>
 	<body>{{/* Corresponding </body> tag can be found in footer.html. */}}

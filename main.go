@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 	"log"
@@ -45,15 +44,10 @@ func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	})
 }
 
-func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Fprintf(w, "Hello, %s!\n", ps.ByName("name"))
-}
-
 func main() {
 	router := httprouter.New()
 	router.GET("/", Index)
 	router.GET("/about", About)
-	router.GET("/hello/:name", Hello)
 
 	router.ServeFiles("/css/*filepath", http.Dir("static/css"))
 

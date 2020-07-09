@@ -29,10 +29,16 @@ type pageData struct {
 	// ExtraStylesheets are page-specific CSS files to be imported.
 	// Keywords are page-specific metadata keywords.
 	ExtraStylesheets, Keywords []string
+
+	// Navs are the items to render in the navbar.
+	Navs []Nav
 }
 
 // Generic function to render a specified template (fp) with custom data.
 func renderPage(fp string, w http.ResponseWriter, data pageData) {
+	if len(data.Navs) == 0 {
+		data.Navs = NewNavs()
+	}
 	t := template.Must(template.ParseFiles(fp, headerTFP, footerTFP, navbarTFP))
 	if err := t.Execute(w, data); err != nil { panic(err) }
 }
@@ -42,6 +48,7 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	renderPage(indexTFP, w, pageData{
 		Title: "Home",
 		ExtraStylesheets: []string{"/css/index.css"},
+		Navs: NewNavsWithActive(NavHome),
 	})
 }
 
@@ -51,6 +58,7 @@ func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		Title: "About Me",
 		Body: `My name is Greg. I'm a software developer in Boulder, Colorado.`,
 		Keywords: []string{"UnderConstruction"},
+		Navs: NewNavsWithActive(NavAbout),
 	})
 }
 

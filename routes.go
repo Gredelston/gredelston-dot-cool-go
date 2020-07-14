@@ -8,8 +8,15 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-// Index defines a GET method to route homepage.
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (s *Server) SetupRoutes() {
+	s.Router.GET("/", s.HandleIndex)
+	s.Router.GET("/about", s.HandleAbout)
+	s.Router.GET("/blog/:slug", s.HandleBlogPost)
+	s.Router.PanicHandler = RenderError
+}
+
+// HandleIndex defines a GET method to handle / routes.
+func (s *Server) HandleIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	RenderPage(indexTFP, w, PageData{
 		Title: "Home",
 		ExtraStylesheets: []string{"/css/index.css"},
@@ -17,8 +24,8 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	})
 }
 
-// About defines a GET method to route "About Me" page.
-func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+// HandleAbout defines a GET method to handle /about routes.
+func (s *Server) HandleAbout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	RenderPage(textTFP, w, PageData{
 		Title: "About Me",
 		Body: `My name is Greg. I'm a software developer in Boulder, Colorado.`,
@@ -27,8 +34,8 @@ func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	})
 }
 
-// GET method to route blog pages.
-func Blog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// HandleBlogPost defines a GET method to handle /blog/:slug routes.
+func (s *Server) HandleBlogPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	slug := ps.ByName("slug")
 	blogDir := filepath.Join("static", "blog", slug)
 	if blogDirExists, err := exists(blogDir); err != nil {

@@ -28,15 +28,8 @@ func main() {
 
 func run() error {
 	server := NewServer()
-	router := server.Router
-
-	router.GET("/", Index)
-	router.GET("/about", About)
-	router.GET("/blog/:slug", Blog)
-
-	router.ServeFiles("/css/*filepath", http.Dir("static/css"))
-
-	router.PanicHandler = RenderError
+	server.SetupRoutes()
+	server.Router.ServeFiles("/css/*filepath", http.Dir("static/css"))
 
 	log.Fatal(http.ListenAndServe(":8080", server))
 	return nil

@@ -59,11 +59,14 @@ func renderPage(fp string, w http.ResponseWriter, data PageData) {
 	if err := t.Execute(w, data); err != nil { panic(err) }
 }
 
+// panicf formats s, and panics.
+func panicf(s string, i ...interface{}) { panic(fmt.Sprintf(s, i...)) }
+
 // renderError renders generic error text to the browser.
-func renderError(err error, w http.ResponseWriter) {
+func renderError(w http.ResponseWriter, _ *http.Request, err interface{}) {
 	renderPage(textTFP, w, PageData{
 		Title: "Arrow'd!",
-		Body: fmt.Sprintf("%+v", err),
+		Body: fmt.Sprintf("Internal server error: %+v", err),
 	})
 }
 
@@ -99,19 +102,15 @@ func Blog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	slug := ps.ByName("slug")
 	blogDir := filepath.Join("static", "blog", slug)
 	if blogDirExists, err := exists(blogDir); err != nil {
-		renderError(fmt.Errorf("Finding blogdir for slug %q: %+v", slug, err), w)
-		return
+		panicf("finding blogdir for slug %q: %+v", slug, err)
 	} else if !blogDirExists {
-		renderError(fmt.Errorf("Did not find blogdir for slug %q", slug), w)
-		return
+		panicf("did not find blogdir for slug %q", slug)
 	}
 	blogFile := filepath.Join(blogDir, "index.md")
 	if blogFileExists, err := exists(blogFile); err != nil {
-		renderError(fmt.Errorf("Finding blogfile for slug %q: %+v", slug, err), w)
-		return
+		panicf("Finding blogfile for slug %q: %+v", slug, err)
 	} else if !blogFileExists {
-		renderError(fmt.Errorf("Did not find blogfile for slug %q", slug), w)
-		return
+		panicf("Did not find blogfile for slug %q", slug)
 	}
 	title := slug
 	date := time.Now()
@@ -136,6 +135,8 @@ func main() {
 	router.GET("/blog/:slug", Blog)
 
 	router.ServeFiles("/css/*filepath", http.Dir("static/css"))
+
+	router.PanicHandler = renderError
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

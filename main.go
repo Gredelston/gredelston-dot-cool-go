@@ -38,6 +38,6 @@ func run() error {
 
 	router.PanicHandler = RenderError
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8080", server))
 	return nil
 }

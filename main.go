@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/julienschmidt/httprouter"
 )
 
 // exists checks whether path is present on the local filesystem.
@@ -29,7 +27,9 @@ func main() {
 }
 
 func run() error {
-	router := httprouter.New()
+	server := NewServer()
+	router := server.Router
+
 	router.GET("/", Index)
 	router.GET("/about", About)
 	router.GET("/blog/:slug", Blog)

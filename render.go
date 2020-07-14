@@ -4,20 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"html/template"
+	"path"
 	"time"
-)
-
-const (
-	// Generic template filepaths
-	headerTFP = "template/header.html"
-	footerTFP = "template/footer.html"
-	navbarTFP = "template/navbar.html"
-
-	// Page-specific template filepaths
-	aboutTFP = "template/about.html"
-	blogTFP  = "template/blog.html"
-	indexTFP = "template/index.html"
-	textTFP  = "template/text.html"
 )
 
 // PageData contains the data needed by RenderPage.
@@ -45,18 +33,20 @@ type BlogData struct {
 	Body  string
 }
 
-// RenderPage generically render a specified template (fp) with custom data.
-func RenderPage(fp string, w http.ResponseWriter, data PageData) {
+// RenderPage generically render a specified page template with custom data.
+func (s *Server) RenderPage(name string, w http.ResponseWriter, data PageData) {
 	if len(data.Navs) == 0 {
 		data.Navs = NewNavs()
 	}
-	t := template.Must(template.ParseFiles(fp, headerTFP, footerTFP, navbarTFP))
+	mainFP := s.Template(name)
+	t := template.New(path.Base(mainFP))
+	t = template.Must(t.ParseFiles(mainFP, s.Template("header"), s.Template("footer"), s.Template("navbar")))
 	if err := t.Execute(w, data); err != nil { panic(err) }
 }
 
 // RenderError renders generic error text to the browser.
-func RenderError(w http.ResponseWriter, _ *http.Request, err interface{}) {
-	RenderPage(textTFP, w, PageData{
+func (s *Server) RenderError(w http.ResponseWriter, _ *http.Request, err interface{}) {
+	s.RenderPage("text", w, PageData{
 		Title: "Arrow'd!",
 		Body: fmt.Sprintf("Internal server error: %+v", err),
 	})

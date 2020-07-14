@@ -5,15 +5,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-)
 
-// exists checks whether path is present on the local filesystem.
-func exists(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err == nil { return true, nil }
-	if os.IsNotExist(err) { return false, nil }
-	return false, err
-}
+	"github.com/joho/godotenv"
+)
 
 // panicf formats s, and panics.
 func panicf(s string, i ...interface{}) { panic(fmt.Sprintf(s, i...)) }
@@ -27,9 +21,12 @@ func main() {
 }
 
 func run() error {
+	if err := godotenv.Load(); err != nil {
+		return fmt.Errorf("loading .env: %+v", err)
+	}
 	server := NewServer()
 	server.SetupRoutes()
-	server.Router.ServeFiles("/css/*filepath", http.Dir("static/css"))
+	server.Router.ServeFiles(server.FullPath("css/*filepath"), http.Dir("static/css"))
 
 	log.Fatal(http.ListenAndServe(":8080", server))
 	return nil

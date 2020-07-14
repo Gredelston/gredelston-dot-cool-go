@@ -11,7 +11,7 @@ import (
 
 // Index defines a GET method to route homepage.
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	renderPage(indexTFP, w, PageData{
+	RenderPage(indexTFP, w, PageData{
 		Title: "Home",
 		ExtraStylesheets: []string{"/css/index.css"},
 		Navs: NewNavsWithActive(NavHome),
@@ -20,7 +20,7 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 // About defines a GET method to route "About Me" page.
 func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	renderPage(textTFP, w, PageData{
+	RenderPage(textTFP, w, PageData{
 		Title: "About Me",
 		Body: `My name is Greg. I'm a software developer in Boulder, Colorado.`,
 		Keywords: []string{"UnderConstruction"},
@@ -55,7 +55,7 @@ func Blog(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	date := time.Now()
 	tags := []string{"CoolTag1", "UncoolTagLambda"}
 	body := "Wow, what a cool blog post!"
-	renderPage(blogTFP, w, PageData{
+	RenderPage(blogTFP, w, PageData{
 		Title: title,
 		BlogData: BlogData{
 			Title: title,

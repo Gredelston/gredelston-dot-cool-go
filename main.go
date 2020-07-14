@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 	"log"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -16,12 +17,13 @@ const (
 
 	// Page-specific template filepaths
 	aboutTFP = "template/about.html"
+	blogTFP  = "template/blog.html"
 	indexTFP = "template/index.html"
-	textTFP = "template/text.html"
+	textTFP  = "template/text.html"
 )
 
-// Generic struct containing data needed by renderPage.
-type pageData struct {
+// PageData contains the data needed by renderPage.
+type PageData struct {
 	// Title is the title of the page.
 	// Body is used by some templates (e.g. text.html) for the main text body.
 	Title, Body string
@@ -32,10 +34,21 @@ type pageData struct {
 
 	// Navs are the items to render in the navbar.
 	Navs []Nav
+
+	// BlogData contains data used for blog-type posts.
+	BlogData BlogData
+}
+
+// BlogData contains the data needed to render a blog post.
+type BlogData struct {
+	Title string
+	Date  time.Time
+	Tags  []string
+	Body  string
 }
 
 // Generic function to render a specified template (fp) with custom data.
-func renderPage(fp string, w http.ResponseWriter, data pageData) {
+func renderPage(fp string, w http.ResponseWriter, data PageData) {
 	if len(data.Navs) == 0 {
 		data.Navs = NewNavs()
 	}
@@ -45,7 +58,7 @@ func renderPage(fp string, w http.ResponseWriter, data pageData) {
 
 // GET method to route homepage.
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	renderPage(indexTFP, w, pageData{
+	renderPage(indexTFP, w, PageData{
 		Title: "Home",
 		ExtraStylesheets: []string{"/css/index.css"},
 		Navs: NewNavsWithActive(NavHome),
@@ -54,11 +67,28 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 // GET method to route "About Me" page.
 func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	renderPage(textTFP, w, pageData{
+	renderPage(textTFP, w, PageData{
 		Title: "About Me",
 		Body: `My name is Greg. I'm a software developer in Boulder, Colorado.`,
 		Keywords: []string{"UnderConstruction"},
 		Navs: NewNavsWithActive(NavAbout),
+	})
+}
+
+// GET method to route blog pages.
+func Blog(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	title := "My Fake Blog Post"
+	date := time.Now()
+	tags := []string{"CoolTag1", "UncoolTagLambda"}
+	body := "Wow, what a cool blog post!"
+	renderPage(blogTFP, w, PageData{
+		Title: title,
+		BlogData: BlogData{
+			Title: title,
+			Date: date,
+			Tags: tags,
+			Body: body,
+		},
 	})
 }
 
@@ -67,6 +97,7 @@ func main() {
 	router := httprouter.New()
 	router.GET("/", Index)
 	router.GET("/about", About)
+	router.GET("/blog/:slug", Blog)
 
 	router.ServeFiles("/css/*filepath", http.Dir("static/css"))
 

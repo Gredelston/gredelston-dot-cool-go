@@ -1,0 +1,9 @@
+{{/* Template to render a blog post.*/}}
+{{template "header" . -}}
+<h1>{{.BlogData.Title}}</h1><br>
+<i>{{.BlogData.Date}}</i>
+<br>---<br>
+{{.BlogData.Body}}
+<br>---<br>
+{{range .BlogData.Tags}}{{.}}{{end}}
+{{- template "footer"}}

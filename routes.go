@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"os"
 	"path/filepath"
 	"time"
 
@@ -26,14 +25,6 @@ func About(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		Keywords: []string{"UnderConstruction"},
 		Navs: NewNavsWithActive(NavAbout),
 	})
-}
-
-// exists checks whether path is present on the local filesystem.
-func exists(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err == nil { return true, nil }
-	if os.IsNotExist(err) { return false, nil }
-	return false, err
 }
 
 // GET method to route blog pages.

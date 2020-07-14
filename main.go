@@ -22,6 +22,13 @@ func panicf(s string, i ...interface{}) { panic(fmt.Sprintf(s, i...)) }
 
 // Main function, handles routing.
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	router := httprouter.New()
 	router.GET("/", Index)
 	router.GET("/about", About)
@@ -32,4 +39,5 @@ func main() {
 	router.PanicHandler = RenderError
 
 	log.Fatal(http.ListenAndServe(":8080", router))
+	return nil
 }

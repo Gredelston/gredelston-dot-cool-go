@@ -19,7 +19,7 @@ func (s *Server) SetupRoutes() {
 func (s *Server) HandleIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	s.RenderPage("index", w, PageData{
 		Title: "Home",
-		ExtraStylesheets: []string{("css/index.css")},
+		ExtraStylesheets: []string{("/css/index.css")},
 		Navs: NewNavsWithActive(NavHome),
 	})
 }

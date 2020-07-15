@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"html/template"
 	"path"
-	"time"
 )
 
 // PageData contains the data needed by RenderPage.
@@ -22,15 +21,7 @@ type PageData struct {
 	Navs []Nav
 
 	// BlogData contains data used for blog-type posts.
-	BlogData BlogData
-}
-
-// BlogData contains the data needed to render a blog post.
-type BlogData struct {
-	Title string
-	Date  time.Time
-	Tags  []string
-	Body  string
+	BlogData BlogPost
 }
 
 // RenderPage generically render a specified page template with custom data.

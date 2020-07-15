@@ -2,8 +2,6 @@ package main
 
 import (
 	"net/http"
-	"path/filepath"
-	"time"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -37,25 +35,17 @@ func (s *Server) HandleAbout(w http.ResponseWriter, r *http.Request, _ httproute
 // HandleBlogPost defines a GET method to handle /blog/:slug routes.
 func (s *Server) HandleBlogPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	slug := ps.ByName("slug")
-	blogDir := s.FullPath("static/blog", slug)
-	if blogDirExists, err := s.FullPathExists(blogDir); err != nil {
-		panicf("finding blogdir for slug %q: %+v", slug, err)
-	} else if !blogDirExists {
-		panicf("did not find blogdir for slug %q", slug)
+	bp, ok := s.BlogPostBySlug(slug)
+	if !ok {
+		panicf("no blog post found for slug %s", slug)
 	}
-	blogFile := filepath.Join(blogDir, "index.md")
-	if blogFileExists, err := s.FullPathExists(blogFile); err != nil {
-		panicf("Finding blogfile for slug %q: %+v", slug, err)
-	} else if !blogFileExists {
-		panicf("Did not find blogfile for slug %q", slug)
-	}
-	title := slug
-	date := time.Now()
+	title := bp.Slug
+	date := bp.Date
 	tags := []string{"CoolTag1", "UncoolTagLambda"}
-	body := "Wow, what a cool blog post!"
+	body := bp.Body
 	s.RenderPage("blog", w, PageData{
 		Title: title,
-		BlogData: BlogData{
+		BlogData: BlogPost{
 			Title: title,
 			Date: date,
 			Tags: tags,

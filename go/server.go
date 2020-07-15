@@ -10,6 +10,7 @@ import (
 )
 
 type Server struct {
+	BlogPosts []BlogPost
 	root      string
 	Router    *httprouter.Router
 	templates map[string]string
@@ -36,6 +37,14 @@ func NewServer() *Server {
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.Router.ServeHTTP(w, r)
+}
+
+// LoadData initializes any data that the server will depend on.
+func (s *Server) LoadData() error {
+	if err := s.LoadBlogData(); err != nil {
+		return fmt.Errorf("loading blog data: %+v", err)
+	}
+	return nil
 }
 
 // FullPath joins the specified path elements to the server's fileroot.

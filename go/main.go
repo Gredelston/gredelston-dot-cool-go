@@ -25,6 +25,7 @@ func run() error {
 		return fmt.Errorf("loading .env: %+v", err)
 	}
 	server := NewServer()
+	server.LoadData()
 	server.SetupRoutes()
 	server.Router.ServeFiles("/css/*filepath", http.Dir(server.FullPath("static/css")))
 

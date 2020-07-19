@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -16,7 +17,13 @@ type Server struct {
 	templates map[string]string
 }
 
-func NewServer() *Server {
+func NewServer() (*Server, error) {
+	if os.Getenv("SITEROOT") == "" {
+		if err := godotenv.Load(); err != nil {
+			return nil, fmt.Errorf("loading .env: %+v", err)
+		}
+	}
+
 	return &Server{
 		root:      os.Getenv("SITEROOT"),
 		Router:    httprouter.New(),
@@ -32,7 +39,7 @@ func NewServer() *Server {
 			"index": "template/index.html",
 			"text":  "template/text.html",
 		},
-	}
+	}, nil
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -78,4 +85,9 @@ func (s *Server) Template(name string) string {
 		panic(fmt.Sprintf("HTML template file %q not found", name))
 	}
 	return fp
+}
+
+// BlogRoot returns the full path to the blog root.
+func (s *Server) BlogRoot() string {
+	return s.FullPath("static", "blog")
 }

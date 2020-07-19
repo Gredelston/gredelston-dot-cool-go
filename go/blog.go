@@ -18,12 +18,7 @@ type BlogPost struct {
 }
 
 func (s *Server) LoadBlogData() error {
-	blogRoot := s.FullPath("static/blog")
-	if exists, err := s.FullPathExists(blogRoot); err != nil {
-		return fmt.Errorf("determining whether blog root exists: %+v", err)
-	} else if !exists {
-		return fmt.Errorf("blog root %s does not exist", blogRoot)
-	}
+	blogRoot := s.BlogRoot()
 	dirs, err := ioutil.ReadDir(blogRoot)
 	if err != nil {
 		return fmt.Errorf("failed to read files from blog root: %+v", err)

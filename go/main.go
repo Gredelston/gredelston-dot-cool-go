@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 // panicf formats s, and panics.
@@ -21,10 +19,8 @@ func main() {
 }
 
 func run() error {
-	if err := godotenv.Load(); err != nil {
-		return fmt.Errorf("loading .env: %+v", err)
-	}
-	server := NewServer()
+	server, err := NewServer()
+	if err != nil { return err }
 	server.LoadData()
 	server.SetupRoutes()
 	server.Router.ServeFiles("/css/*filepath", http.Dir(server.FullPath("static/css")))

@@ -3,13 +3,15 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"html/template"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
 // BlogPost contains the data of a single blog post.
 type BlogPost struct {
-	Body   string
+	Body   template.HTML
 	Date   time.Time
 	Hidden bool
 	Slug   string
@@ -35,12 +37,14 @@ func allDirsWithin(parent string) ([]string, error) {
 // loadBlogPost reads a blog-post directory and returns a populated BlogPost object.
 func loadBlogPost(dir string) (*BlogPost, error) {
 	indexFP := filepath.Join(dir, "index.md")
-	content, err := ioutil.ReadFile(indexFP)
+	b, err := ioutil.ReadFile(indexFP)
 	if err != nil {
 		return nil, fmt.Errorf("reading %s: %+v", indexFP, err)
 	}
+	body := string(b)
+	body = strings.ReplaceAll(body, "\n", "<br>")
 	return &BlogPost{
-		Body: string(content),
+		Body: template.HTML(body),
 		Date: time.Now(),
 		Slug: filepath.Base(dir),
 		Title: "My cool title!",

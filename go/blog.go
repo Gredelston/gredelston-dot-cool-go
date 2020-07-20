@@ -42,6 +42,7 @@ func loadBlogPost(dir string) (BlogPost, error) {
 	}, nil
 }
 
+// LoadBlogPosts converts each directory within blogRoot into a BlogPost object.
 func LoadBlogPosts(blogRoot string) ([]BlogPost, error) {
 	blogPostDirs, err := allDirsWithin(blogRoot)
 	if err != nil {

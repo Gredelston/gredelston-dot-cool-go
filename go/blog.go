@@ -49,6 +49,7 @@ func loadBlogPost(dir string) (*BlogPost, error) {
 	body = strings.TrimSpace(body)
 	body = strings.ReplaceAll(body, "\n", "<br>")
 	body = regexp.MustCompile(`\[((?:[^\]\r\n]|\\\])+)\]\((\S+)\)`).ReplaceAllString(body, `<a href=${2}>${1}</a>`)
+	body = regexp.MustCompile(`\*\*([^\r\n]+)\*\*`).ReplaceAllString(body, `<b>${1}</b>`)
 
 	// Read meta.json
 	metaFP := filepath.Join(dir, "meta.json")

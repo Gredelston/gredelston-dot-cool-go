@@ -32,24 +32,35 @@ func allDirsWithin(parent string) ([]string, error) {
 	return childDirs, nil
 }
 
+// loadBlogPost reads a blog-post directory and returns a populated BlogPost object.
+func loadBlogPost(dir string) (BlogPost, error) {
+	return BlogPost{
+		Body: "Hello!",
+		Date: time.Now(),
+		Slug: filepath.Base(dir),
+		Title: "My cool title!",
+	}, nil
+}
+
 func (s *Server) LoadBlogData() error {
 	blogPostDirs, err := allDirsWithin(s.BlogRoot())
-	if err != nil { return err }
-	var posts []BlogPost
-	for _, dir := range blogPostDirs {
+	if err != nil {
+		return err
+	}
+	posts := make([]BlogPost, len(blogPostDirs))
+	for i, dir := range blogPostDirs {
 		indexPath := filepath.Join(dir, "index.md")
 		fmt.Println(indexPath)
 		if exists, err := s.FullPathExists(indexPath); err != nil {
-			return fmt.Errorf("determining whether blog post %s has an index.md: %+v", dir, err)
+			return fmt.Errorf("determining whether blog post %s has an index.md: %+v", filepath.Base(dir), err)
 		} else if !exists {
 			continue
 		}
-		posts = append(posts, BlogPost{
-			Body: "Hello!",
-			Date: time.Now(),
-			Slug: filepath.Base(dir),
-			Title: "My cool title!",
-		})
+		if post, err := loadBlogPost(dir); err != nil {
+			return fmt.Errorf("loading blog post %s: %+v", filepath.Base(dir), err)
+		} else {
+			posts[i] = post
+		}
 	}
 	s.BlogPosts = posts
 	return nil

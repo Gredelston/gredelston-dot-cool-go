@@ -6,9 +6,10 @@ import (
 	"io/ioutil"
 	"html/template"
 	"path/filepath"
-	"regexp"
-	"strings"
 	"time"
+
+	"github.com/gomarkdown/markdown"
+	"github.com/gomarkdown/markdown/parser"
 )
 
 // BlogPost contains the data of a single blog post.
@@ -45,12 +46,8 @@ func loadBlogPost(dir string) (*BlogPost, error) {
 	if err != nil {
 		return nil, fmt.Errorf("reading %s: %+v", indexFP, err)
 	}
+	b = markdown.ToHTML(b, parser.NewWithExtensions(parser.HardLineBreak), nil)
 	body := string(b)
-	body = strings.TrimSpace(body)
-	body = strings.ReplaceAll(body, "\n", "<br>")
-	body = regexp.MustCompile(`\[((?:[^\]\r\n]|\\\])+)\]\((\S+)\)`).ReplaceAllString(body, `<a href=${2}>${1}</a>`)
-	body = regexp.MustCompile(`\*\*([^\r\n]+)\*\*`).ReplaceAllString(body, `<b>${1}</b>`)
-	body = regexp.MustCompile(`\*([^\r\n]+)\*`).ReplaceAllString(body, `<i>${1}</i>`)
 
 	// Read meta.json
 	metaFP := filepath.Join(dir, "meta.json")

@@ -11,7 +11,7 @@ import (
 )
 
 type Server struct {
-	BlogPosts []BlogPost
+	BlogPosts []*BlogPost
 	root      string
 	Router    *httprouter.Router
 	templates map[string]string

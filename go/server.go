@@ -34,10 +34,11 @@ func NewServer() (*Server, error) {
 			"navbar": "navbar.html",
 
 			// Page-specific template files
-			"about": "about.html",
-			"blog":  "blog.html",
-			"index": "index.html",
-			"text":  "text.html",
+			"about":     "about.html",
+			"blog":      "blog.html",
+			"blogroll":  "blogroll.html",
+			"index":     "index.html",
+			"text":      "text.html",
 		},
 	}, nil
 }

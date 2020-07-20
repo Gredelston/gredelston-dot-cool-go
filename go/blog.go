@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"html/template"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -47,6 +48,7 @@ func loadBlogPost(dir string) (*BlogPost, error) {
 	body := string(b)
 	body = strings.TrimSpace(body)
 	body = strings.ReplaceAll(body, "\n", "<br>")
+	body = regexp.MustCompile(`\[((?:[^\]\r\n]|\\\])+)\]\((\S+)\)`).ReplaceAllString(body, `<a href=${2}>${1}</a>`)
 
 	// Read meta.json
 	metaFP := filepath.Join(dir, "meta.json")

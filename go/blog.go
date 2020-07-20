@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"html/template"
+	"io/ioutil"
 	"path/filepath"
 	"time"
 )
@@ -69,7 +69,7 @@ func loadBlogPost(dir string) (*BlogPost, error) {
 func LoadBlogPosts(blogRoot string) ([]*BlogPost, error) {
 	blogPostDirs, err := allDirsWithin(blogRoot)
 	if err != nil {
-		return nil ,err
+		return nil, err
 	}
 	posts := make([]*BlogPost, len(blogPostDirs))
 	for i, dir := range blogPostDirs {

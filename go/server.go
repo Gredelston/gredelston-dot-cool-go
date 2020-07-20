@@ -25,8 +25,8 @@ func NewServer() (*Server, error) {
 	}
 
 	return &Server{
-		root:          os.Getenv("SITEROOT"),
-		Router:        httprouter.New(),
+		root:   os.Getenv("SITEROOT"),
+		Router: httprouter.New(),
 		templateFiles: map[string]string{
 			// Generic template files
 			"header": "header.html",
@@ -34,11 +34,11 @@ func NewServer() (*Server, error) {
 			"navbar": "navbar.html",
 
 			// Page-specific template files
-			"about":     "about.html",
-			"blog":      "blog.html",
-			"blogroll":  "blogroll.html",
-			"index":     "index.html",
-			"text":      "text.html",
+			"about":    "about.html",
+			"blog":     "blog.html",
+			"blogroll": "blogroll.html",
+			"index":    "index.html",
+			"text":     "text.html",
 		},
 	}, nil
 }
@@ -70,8 +70,12 @@ func (s *Server) FullPath(elem ...string) string {
 // FullPathExists checks whether a fully qualified path is present on the server's filesystem.
 func (s *Server) FullPathExists(fp string) (bool, error) {
 	_, err := os.Stat(fp)
-	if err == nil { return true, nil }
-	if os.IsNotExist(err) { return false, nil }
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
 	return false, err
 }
 

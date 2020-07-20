@@ -26,10 +26,10 @@ func (s *Server) HandleIndex(w http.ResponseWriter, r *http.Request, _ httproute
 // HandleAbout defines a GET method to handle /about routes.
 func (s *Server) HandleAbout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	s.RenderPage("text", w, PageData{
-		Title: "About Me",
-		Body: `My name is Greg. I'm a software developer in Boulder, Colorado.`,
+		Title:    "About Me",
+		Body:     `My name is Greg. I'm a software developer in Boulder, Colorado.`,
 		Keywords: []string{"UnderConstruction"},
-		Navs: NewNavsWithActive(NavAbout),
+		Navs:     NewNavsWithActive(NavAbout),
 	})
 }
 
@@ -42,7 +42,7 @@ func (s *Server) HandleBlogPost(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 	title := bp.Slug
 	s.RenderPage("blog", w, PageData{
-		Title: title,
+		Title:    title,
 		BlogData: bp,
 	})
 }

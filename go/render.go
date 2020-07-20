@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"html/template"
+	"net/http"
 	"path"
 )
 
@@ -21,7 +21,7 @@ type PageData struct {
 	Navs []Nav
 
 	// BlogData contains data used for blog-type posts.
-	BlogData  *BlogPost
+	BlogData *BlogPost
 
 	// BlogPosts contains the list of blog posts to display on blogroll.html.
 	BlogPosts []*BlogPost
@@ -35,13 +35,15 @@ func (s *Server) RenderPage(name string, w http.ResponseWriter, data PageData) {
 	mainFP := s.TemplateFile(name)
 	t := template.New(path.Base(mainFP))
 	t = template.Must(t.ParseFiles(mainFP, s.TemplateFile("header"), s.TemplateFile("footer"), s.TemplateFile("navbar"), s.TemplateFile("blogroll")))
-	if err := t.Execute(w, data); err != nil { panic(err) }
+	if err := t.Execute(w, data); err != nil {
+		panic(err)
+	}
 }
 
 // RenderError renders generic error text to the browser.
 func (s *Server) RenderError(w http.ResponseWriter, _ *http.Request, err interface{}) {
 	s.RenderPage("text", w, PageData{
 		Title: "Arrow'd!",
-		Body: fmt.Sprintf("Internal server error: %+v", err),
+		Body:  fmt.Sprintf("Internal server error: %+v", err),
 	})
 }

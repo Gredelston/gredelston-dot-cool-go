@@ -2,8 +2,8 @@ package main
 
 // Nav contains the data necessary to render a single element of the navbar.
 type Nav struct {
-	Text  string
-	HRef  string
+	Text   string
+	HRef   string
 	Active bool
 }
 

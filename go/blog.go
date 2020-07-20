@@ -49,13 +49,6 @@ func (s *Server) LoadBlogData() error {
 	}
 	posts := make([]BlogPost, len(blogPostDirs))
 	for i, dir := range blogPostDirs {
-		indexPath := filepath.Join(dir, "index.md")
-		fmt.Println(indexPath)
-		if exists, err := s.FullPathExists(indexPath); err != nil {
-			return fmt.Errorf("determining whether blog post %s has an index.md: %+v", filepath.Base(dir), err)
-		} else if !exists {
-			continue
-		}
 		if post, err := loadBlogPost(dir); err != nil {
 			return fmt.Errorf("loading blog post %s: %+v", filepath.Base(dir), err)
 		} else {

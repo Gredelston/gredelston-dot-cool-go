@@ -48,7 +48,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // LoadData initializes any data that the server will depend on.
 func (s *Server) LoadData() error {
-	if err := s.LoadBlogData(); err != nil {
+	if err := s.LoadBlogPosts(); err != nil {
 		return fmt.Errorf("loading blog data: %+v", err)
 	}
 	return nil

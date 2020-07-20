@@ -42,7 +42,7 @@ func loadBlogPost(dir string) (BlogPost, error) {
 	}, nil
 }
 
-func (s *Server) LoadBlogData() error {
+func (s *Server) LoadBlogPosts() error {
 	blogPostDirs, err := allDirsWithin(s.BlogRoot())
 	if err != nil {
 		return err

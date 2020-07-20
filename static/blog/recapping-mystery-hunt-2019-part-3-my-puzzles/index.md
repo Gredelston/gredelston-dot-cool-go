@@ -1,9 +1,3 @@
----
-title: "Recapping Mystery Hunt 2019, Part 3: My Puzzles"
-date: "2019-01-23"
-description: "My creations within a saga of a Molasses Flood, an associated holiday, and 159 puzzles."
-tags: ["puzzles"]
----
 *This is the final post in a series about MIT Mystery Hunt 2019. It is preceded by “[Puzzlehunts: An Overview](/puzzlehunts-an-overview),” “[Part 1: Story](/recapping-mystery-hunt-2019-part-1-story),” and “[Part 2: Structure](/recapping-mystery-hunt-2019-part-2-structure).”*
 
 This is the post that I’ve been waiting for so long to write: the one where I reveal to my friends and family the puzzles that I have been crafting for a year.

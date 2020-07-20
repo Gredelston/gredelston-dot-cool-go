@@ -1,9 +1,3 @@
----
-title: "Dungeon Riddles as Password Hints"
-date: 2019-06-09
-description: "Why would a rational dungeon-dweller ensnare their home with riddles? (HINT: What's the riddle on your Windows login screen?)"
-tags: ["d&d"]
----
 When I run a game of D&D, I want my world to be believable. Monsters should dwell where they do for a reason; political unrest should have a social history; and each room in a dungeon should be used by its denizens. A cohesive world is more immersive to the players, and easier to improvise in as a DM.
 
 However, there is one facet of the game which I have always failed to fit into the narrative: Why on earth would any dungeon-dweller fill their home with riddles, complete with hints to the solver?

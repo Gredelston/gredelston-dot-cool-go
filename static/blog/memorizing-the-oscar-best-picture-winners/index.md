@@ -1,9 +1,3 @@
----
-title: Memorizing the Oscar Best Picture Winners
-date: 2020-02-24
-description: "Reflections on meeting a useless goal."
-tags: ["puzzles"]
----
 This week I learned all the winners of the Academy Award for Best Picture, by year. It took me 5 days. Here's how I did it.
 
 ## My tool: `quizme`

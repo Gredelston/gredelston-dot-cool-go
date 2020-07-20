@@ -65,6 +65,7 @@ func TestAllDirsWithin(t *testing.T) {
 	}
 }
 
+// TestAllBlogPostsHaveIndexMD ensures that each dir in BlogRoot contains index.md.
 func TestAllBlogPostsHaveIndexMD(t *testing.T) {
 	s, err := NewServer()
 	if err != nil {
@@ -81,6 +82,27 @@ func TestAllBlogPostsHaveIndexMD(t *testing.T) {
 			t.Fatalf("Failed to determine whether blog post %s has an index.md: %+v", filepath.Base(dir), err)
 		} else if !exists {
 			t.Errorf("Blog post %s has no index.md", filepath.Base(dir))
+		}
+	}
+}
+
+// TestAllBlogPostsHaveMetaJSON ensures that each dir in BlogRoot contains meta.json.
+func TestAllBlogPostsHaveMetaJSON(t *testing.T) {
+	s, err := NewServer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	blogRoot := s.BlogRoot()
+	blogDirs, err := allDirsWithin(blogRoot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, dir := range blogDirs {
+		metaPath := filepath.Join(dir, "meta.json")
+		if exists, err := s.FullPathExists(metaPath); err != nil {
+			t.Fatalf("Failed to determine whether blog post %s has an meta.json: %+v", filepath.Base(dir), err)
+		} else if !exists {
+			t.Errorf("Blog post %s has no meta.json", filepath.Base(dir))
 		}
 	}
 }

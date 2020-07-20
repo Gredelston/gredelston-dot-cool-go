@@ -1,9 +1,3 @@
----
-title: "Recapping Mystery Hunt 2019, Part 1: Story"
-date: "2019-01-22T23:59:57"
-description: "The story of a Molasses Flood, an associated holiday, and 159 puzzles."
-tags: ["puzzles"]
----
 *This is a part of a series about MIT Mystery Hunt 2019. It is preceded by “[Puzzlehunts: An Overview](/puzzlehunts-an-overview),” and proceeded by “[Part 2: Structure](/recapping-mystery-hunt-2019-part-2-structure)” and “[Part 3: My Puzzles](/recapping-mystery-hunt-2019-part-3-my-puzzles).”*
 
 **Note:** While I was on the team which wrote this year’s Mystery Hunt, I had very little impact on the story. My efforts were focused on writing, testing, and laying out puzzles.

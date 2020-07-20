@@ -1,9 +1,3 @@
----
-title: "Puzzlehunts: An Overview"
-date: "2019-01-22T22:12:03.284Z"
-description: I attempt to describe the arcane genre of &ldquo;puzzlehunts.&rdquo;
-tags: ["puzzles"]
----
 This past weekend, nerds from all over flocked to Massachusetts to spend over fifty hours solving puzzles at [MIT Mystery Hunt](http://www.mit.edu/~puzzle/). I was a part of the team which ran this year’s Hunt, so my brain is full of thoughts about puzzles which I would like to share. Because [puzzlehunts](https://en.wikipedia.org/wiki/Puzzlehunt) are a particularly niche form of entertainment, I want to offer an overview of the genre before delving into more specific topics.
 
 ## Puzzlehunts and the Puzzles Therein

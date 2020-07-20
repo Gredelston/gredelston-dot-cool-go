@@ -20,8 +20,12 @@ func main() {
 
 func run() error {
 	server, err := NewServer()
-	if err != nil { return err }
-	server.LoadData()
+	if err != nil {
+		return fmt.Errorf("initializing server: %+v", err)
+	}
+	if err := server.LoadData(); err != nil {
+		return fmt.Errorf("loading server data: %+v", err)
+	}
 	server.SetupRoutes()
 	server.Router.ServeFiles("/css/*filepath", http.Dir(server.FullPath("static/css")))
 

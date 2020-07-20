@@ -1,9 +1,3 @@
----
-title: Why I’m Switching from Evernote to Todoist
-date: 2019-03-22
-description: "I&rsquo;m exploring a new GTD tool."
-tags: ["gtd"]
----
 For the past 18 months, I have practiced the Getting Things Done (GTD) methodology, with Evernote as the de-facto home for my Next Action lists. I briefly experimented with a paper system, but I found that the portability of a digital system makes a big difference for me.
 
 In the name of iteration, today I am switching from Evernote to Todoist. Here’s why.

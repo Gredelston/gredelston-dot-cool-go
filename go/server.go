@@ -48,11 +48,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // LoadData initializes any data that the server will depend on.
 func (s *Server) LoadData() error {
-	if posts, err := LoadBlogPosts(s.BlogRoot()); err != nil {
+	// Blog posts
+	posts, err := LoadBlogPosts(s.BlogRoot())
+	if err != nil {
 		return fmt.Errorf("loading blog data: %+v", err)
-	} else {
-		s.BlogPosts = posts
 	}
+	s.BlogPosts = posts
+	for _, p := range posts {
+		s.Router.ServeFiles(fmt.Sprintf("/assets/%s/*filepath", p.Slug), http.Dir(p.ServerPath))
+	}
+
 	return nil
 }
 

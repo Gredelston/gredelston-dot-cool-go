@@ -18,12 +18,13 @@ type BlogPost struct {
 	Hidden     bool
 	PostedDate time.Time
 	rawDate    string `json:Date`
+	ServerPath string
 	Slug       string
 	Title      string
 	Tags       []string
 }
 
-// allDirsWithin returns an array of directories within some dir parent.
+// allDirsWithin returns a slice of directories within some dir.
 func allDirsWithin(parent string) ([]string, error) {
 	var childDirs []string
 	children, err := ioutil.ReadDir(parent)
@@ -63,6 +64,7 @@ func loadBlogPost(dir string) (*BlogPost, error) {
 	// Populate BlogPost and return
 	post.PostedDate = time.Now()
 	post.Body = template.HTML(body)
+	post.ServerPath = dir
 	post.Slug = filepath.Base(dir)
 	return post, nil
 }

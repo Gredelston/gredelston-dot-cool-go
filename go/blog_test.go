@@ -65,8 +65,8 @@ func TestAllDirsWithin(t *testing.T) {
 	}
 }
 
-// TestAllBlogPostsHaveIndexMD ensures that each dir in BlogRoot contains index.md.
-func TestAllBlogPostsHaveIndexMD(t *testing.T) {
+// TestAllBlogPostsHaveIndexHTML ensures that each dir in BlogRoot contains index.html.
+func TestAllBlogPostsHaveIndexHTML(t *testing.T) {
 	s, err := NewServer()
 	if err != nil {
 		t.Fatal(err)
@@ -77,11 +77,11 @@ func TestAllBlogPostsHaveIndexMD(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, dir := range blogDirs {
-		indexPath := filepath.Join(dir, "index.md")
+		indexPath := filepath.Join(dir, "index.html")
 		if exists, err := s.FullPathExists(indexPath); err != nil {
-			t.Fatalf("Failed to determine whether blog post %s has an index.md: %+v", filepath.Base(dir), err)
+			t.Fatalf("Failed to determine whether blog post %s has an index.html: %+v", filepath.Base(dir), err)
 		} else if !exists {
-			t.Errorf("Blog post %s has no index.md", filepath.Base(dir))
+			t.Errorf("Blog post %s has no index.html", filepath.Base(dir))
 		}
 	}
 }

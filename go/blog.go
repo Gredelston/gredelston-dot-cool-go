@@ -7,9 +7,6 @@ import (
 	"html/template"
 	"path/filepath"
 	"time"
-
-	"github.com/gomarkdown/markdown"
-	"github.com/gomarkdown/markdown/parser"
 )
 
 // BlogPost contains the data of a single blog post.
@@ -41,13 +38,12 @@ func allDirsWithin(parent string) ([]string, error) {
 
 // loadBlogPost reads a blog-post directory and returns a populated BlogPost object.
 func loadBlogPost(dir string) (*BlogPost, error) {
-	// Read index.md
-	indexFP := filepath.Join(dir, "index.md")
+	// Read index.html
+	indexFP := filepath.Join(dir, "index.html")
 	b, err := ioutil.ReadFile(indexFP)
 	if err != nil {
 		return nil, fmt.Errorf("reading %s: %+v", indexFP, err)
 	}
-	b = markdown.ToHTML(b, parser.NewWithExtensions(parser.HardLineBreak), nil)
 	body := string(b)
 
 	// Read meta.json

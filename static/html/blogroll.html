@@ -1,0 +1,11 @@
+{{define "blogroll" -}} 
+<h3>Blogroll</h3>
+<div id="blogroll">
+	<ul>
+		{{range .BlogPosts -}}
+		<li>
+			<a href="/blog/{{.Slug}}">{{.Title}}</a>
+		</li>
+		{{- end}}
+	</ul>
+{{- end}}

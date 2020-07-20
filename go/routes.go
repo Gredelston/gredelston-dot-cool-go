@@ -16,9 +16,10 @@ func (s *Server) SetupRoutes() {
 // HandleIndex defines a GET method to handle / routes.
 func (s *Server) HandleIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	s.RenderPage("index", w, PageData{
-		Title: "Home",
+		Title:            "Home",
 		ExtraStylesheets: []string{("/css/index.css")},
-		Navs: NewNavsWithActive(NavHome),
+		Navs:             NewNavsWithActive(NavHome),
+		BlogPosts:        s.BlogPosts,
 	})
 }
 

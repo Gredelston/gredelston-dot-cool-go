@@ -21,7 +21,10 @@ type PageData struct {
 	Navs []Nav
 
 	// BlogData contains data used for blog-type posts.
-	BlogData *BlogPost
+	BlogData  *BlogPost
+
+	// BlogPosts contains the list of blog posts to display on blogroll.html.
+	BlogPosts []*BlogPost
 }
 
 // RenderPage generically render a specified page template with custom data.
@@ -31,7 +34,7 @@ func (s *Server) RenderPage(name string, w http.ResponseWriter, data PageData) {
 	}
 	mainFP := s.TemplateFile(name)
 	t := template.New(path.Base(mainFP))
-	t = template.Must(t.ParseFiles(mainFP, s.TemplateFile("header"), s.TemplateFile("footer"), s.TemplateFile("navbar")))
+	t = template.Must(t.ParseFiles(mainFP, s.TemplateFile("header"), s.TemplateFile("footer"), s.TemplateFile("navbar"), s.TemplateFile("blogroll")))
 	if err := t.Execute(w, data); err != nil { panic(err) }
 }
 

@@ -40,16 +40,8 @@ func (s *Server) HandleBlogPost(w http.ResponseWriter, r *http.Request, ps httpr
 		panicf("no blog post found for slug %s", slug)
 	}
 	title := bp.Slug
-	date := bp.Date
-	tags := []string{"CoolTag1", "UncoolTagLambda"}
-	body := bp.Body
 	s.RenderPage("blog", w, PageData{
 		Title: title,
-		BlogData: BlogPost{
-			Title: title,
-			Date: date,
-			Tags: tags,
-			Body: body,
-		},
+		BlogData: bp,
 	})
 }

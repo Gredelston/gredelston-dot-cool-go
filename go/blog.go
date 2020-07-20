@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"html/template"
@@ -11,12 +12,13 @@ import (
 
 // BlogPost contains the data of a single blog post.
 type BlogPost struct {
-	Body   template.HTML
-	Date   time.Time
-	Hidden bool
-	Slug   string
-	Title  string
-	Tags   []string
+	Body       template.HTML
+	Hidden     bool
+	PostedDate time.Time
+	rawDate    string `json:Date`
+	Slug       string
+	Title      string
+	Tags       []string
 }
 
 // allDirsWithin returns an array of directories within some dir parent.
@@ -36,19 +38,32 @@ func allDirsWithin(parent string) ([]string, error) {
 
 // loadBlogPost reads a blog-post directory and returns a populated BlogPost object.
 func loadBlogPost(dir string) (*BlogPost, error) {
+	// Read index.md
 	indexFP := filepath.Join(dir, "index.md")
 	b, err := ioutil.ReadFile(indexFP)
 	if err != nil {
 		return nil, fmt.Errorf("reading %s: %+v", indexFP, err)
 	}
 	body := string(b)
+	body = strings.TrimSpace(body)
 	body = strings.ReplaceAll(body, "\n", "<br>")
-	return &BlogPost{
-		Body: template.HTML(body),
-		Date: time.Now(),
-		Slug: filepath.Base(dir),
-		Title: "My cool title!",
-	}, nil
+
+	// Read meta.json
+	metaFP := filepath.Join(dir, "meta.json")
+	b, err = ioutil.ReadFile(metaFP)
+	if err != nil {
+		return nil, fmt.Errorf("readings %s: %+v", metaFP, err)
+	}
+	post := &BlogPost{}
+	if err = json.Unmarshal(b, post); err != nil {
+		return nil, fmt.Errorf("unmarshaling %s: %+v", metaFP, err)
+	}
+
+	// Populate BlogPost and return
+	post.PostedDate = time.Now()
+	post.Body = template.HTML(body)
+	post.Slug = filepath.Base(dir)
+	return post, nil
 }
 
 // LoadBlogPosts converts each directory within blogRoot into a BlogPost object.

@@ -21,7 +21,7 @@ type PageData struct {
 	Navs []Nav
 
 	// BlogData contains data used for blog-type posts.
-	BlogData BlogPost
+	BlogData *BlogPost
 }
 
 // RenderPage generically render a specified page template with custom data.

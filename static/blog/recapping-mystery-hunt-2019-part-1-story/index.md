@@ -41,6 +41,6 @@ Jack and the Fool reminisce about how much fun the flood was. Together, they dec
 
 You extract the coin. You have saved the Holiday Forest and won Mystery Hunt.
 
-![The Coin, as photographed by Roger Ford).](./coin.jpg)
+![The Coin, as photographed by Roger Ford.](./coin.jpg)
 
 *Photo credit: The Molasses Tower was photographed by Connor Stokes. The coin was photographed by [Roger Ford](https://rogerford.org/).*

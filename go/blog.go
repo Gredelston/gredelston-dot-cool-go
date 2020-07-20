@@ -42,21 +42,20 @@ func loadBlogPost(dir string) (BlogPost, error) {
 	}, nil
 }
 
-func (s *Server) LoadBlogPosts() error {
-	blogPostDirs, err := allDirsWithin(s.BlogRoot())
+func LoadBlogPosts(blogRoot string) ([]BlogPost, error) {
+	blogPostDirs, err := allDirsWithin(blogRoot)
 	if err != nil {
-		return err
+		return nil ,err
 	}
 	posts := make([]BlogPost, len(blogPostDirs))
 	for i, dir := range blogPostDirs {
 		if post, err := loadBlogPost(dir); err != nil {
-			return fmt.Errorf("loading blog post %s: %+v", filepath.Base(dir), err)
+			return nil, fmt.Errorf("loading blog post %s: %+v", filepath.Base(dir), err)
 		} else {
 			posts[i] = post
 		}
 	}
-	s.BlogPosts = posts
-	return nil
+	return posts, nil
 }
 
 // BlogPostBySlug searches the server's loaded BlogPosts for one matching by Slug.

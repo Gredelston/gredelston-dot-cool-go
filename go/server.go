@@ -11,10 +11,10 @@ import (
 )
 
 type Server struct {
-	BlogPosts []*BlogPost
-	root      string
-	Router    *httprouter.Router
-	templates map[string]string
+	BlogPosts     []*BlogPost
+	root          string
+	Router        *httprouter.Router
+	templateFiles map[string]string
 }
 
 func NewServer() (*Server, error) {
@@ -25,19 +25,19 @@ func NewServer() (*Server, error) {
 	}
 
 	return &Server{
-		root:      os.Getenv("SITEROOT"),
-		Router:    httprouter.New(),
-		templates: map[string]string{
-			// Generic template filepaths
-			"header": "template/header.html",
-			"footer": "template/footer.html",
-			"navbar": "template/navbar.html",
+		root:          os.Getenv("SITEROOT"),
+		Router:        httprouter.New(),
+		templateFiles: map[string]string{
+			// Generic template files
+			"header": "header.html",
+			"footer": "footer.html",
+			"navbar": "navbar.html",
 
-			// Page-specific template filepaths
-			"about": "template/about.html",
-			"blog":  "template/blog.html",
-			"index": "template/index.html",
-			"text":  "template/text.html",
+			// Page-specific template files
+			"about": "about.html",
+			"blog":  "blog.html",
+			"index": "index.html",
+			"text":  "text.html",
 		},
 	}, nil
 }
@@ -79,13 +79,13 @@ func (s *Server) RelPathExists(rel string) (bool, error) {
 	return s.FullPathExists(s.FullPath(rel))
 }
 
-// Template returns the full path to the named HTML template.
-func (s *Server) Template(name string) string {
-	rel, ok := s.templates[name]
+// TemplateFile returns the full path to the named HTML template.
+func (s *Server) TemplateFile(name string) string {
+	basename, ok := s.templateFiles[name]
 	if !ok {
 		panicf("invalid template name: %s", name)
 	}
-	fp := s.FullPath(rel)
+	fp := s.FullPath("static", "html", basename)
 	if exists, err := s.FullPathExists(fp); err != nil {
 		panic(err)
 	} else if !exists {
@@ -94,7 +94,7 @@ func (s *Server) Template(name string) string {
 	return fp
 }
 
-// BlogRoot returns the full path to the blog root.
+// BlogRoot returns the full path to the directory containing all blog files.
 func (s *Server) BlogRoot() string {
 	return s.FullPath("static", "blog")
 }

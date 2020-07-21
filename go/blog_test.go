@@ -1,10 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"testing"
 )
 
@@ -103,6 +107,38 @@ func TestAllBlogPostsHaveMetaJSON(t *testing.T) {
 			t.Fatalf("Failed to determine whether blog post %s has an meta.json: %+v", filepath.Base(dir), err)
 		} else if !exists {
 			t.Errorf("Blog post %s has no meta.json", filepath.Base(dir))
+		}
+	}
+}
+
+// TestInternalLinks ensures that all INTERNAL links within blog posts yield 200 responses.
+func TestInternalLinks(t *testing.T) {
+	srv, err := NewServer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	posts, err := LoadBlogPosts(srv.BlogRoot())
+	if err != nil {
+		t.Fatal(err)
+	}
+	srv.BlogPosts = posts
+	srv.Router.GET("/blog/:slug", srv.HandleBlogPost)
+	hrefRe := regexp.MustCompile(`<a [^>]*href=['"]([^'"]+)['"][^>]*>`)
+	var url string
+	for _, post := range posts {
+		submatches := hrefRe.FindAllStringSubmatch(string(post.Body), -1)
+		for _, submatch := range submatches {
+			url = submatch[1]
+			if url[0] != '/' {
+				continue
+			}
+			url = fmt.Sprintf("http://localhost:%d%s", srv.Port, url)
+			r := httptest.NewRequest("GET", url, nil)
+			w := httptest.NewRecorder()
+			srv.ServeHTTP(w, r)
+			if w.Result().StatusCode != http.StatusOK {
+				t.Errorf("blog post %s: url %q: got status code %d; want %d", post.Slug, url, w.Result().StatusCode, http.StatusOK)
+			}
 		}
 	}
 }

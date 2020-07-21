@@ -12,6 +12,7 @@ import (
 
 type Server struct {
 	BlogPosts     []*BlogPost
+	Port          int
 	root          string
 	Router        *httprouter.Router
 	templateFiles map[string]string
@@ -25,6 +26,7 @@ func NewServer() (*Server, error) {
 	}
 
 	return &Server{
+		Port:   8080,
 		root:   os.Getenv("SITEROOT"),
 		Router: httprouter.New(),
 		templateFiles: map[string]string{

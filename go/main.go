@@ -29,6 +29,6 @@ func run() error {
 	server.SetupRoutes()
 	server.Router.ServeFiles("/css/*filepath", http.Dir(server.FullPath("static/css")))
 
-	log.Fatal(http.ListenAndServe(":8080", server))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", server.Port), server))
 	return nil
 }

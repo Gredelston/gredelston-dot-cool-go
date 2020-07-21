@@ -137,7 +137,51 @@ func TestInternalLinks(t *testing.T) {
 			w := httptest.NewRecorder()
 			srv.ServeHTTP(w, r)
 			if w.Result().StatusCode != http.StatusOK {
-				t.Errorf("blog post %s: url %q: got status code %d; want %d", post.Slug, url, w.Result().StatusCode, http.StatusOK)
+				t.Errorf("blog post %s: internal url %q: got status code %d; want %d", post.Slug, url, w.Result().StatusCode, http.StatusOK)
+			}
+		}
+	}
+}
+
+// TestExternalLinks ensures that all EXTERNAL links within blog posts yield 200 responses.
+func TestExternalLinks(t *testing.T) {
+	srv, err := NewServer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	posts, err := LoadBlogPosts(srv.BlogRoot())
+	if err != nil {
+		t.Fatal(err)
+	}
+	hrefRe := regexp.MustCompile(`<a [^>]*href=['"]([^'"]+)['"][^>]*>`)
+	var url string
+	for _, post := range posts {
+		submatches := hrefRe.FindAllStringSubmatch(string(post.Body), -1)
+		for _, submatch := range submatches {
+			url = submatch[1]
+			if url[0] == '/' {
+				continue
+			}
+			// First try the fast way, which does not require HTTP headers
+			resp, err := http.Get(url)
+			if err != nil {
+				t.Errorf("blog post %s: external url %q: %+v", post.Slug, url, err)
+			}
+			if resp.StatusCode == http.StatusOK {
+				fmt.Println("success for url: ", url)
+				continue
+			}
+			fmt.Println("failure for url: ", url)
+			// If that failed, try mimicking browser headers
+			req, err := http.NewRequest("GET", url, nil)
+			if err != nil {
+				t.Errorf("blog post %s: url %q: creating request: %+v", post.Slug, url, err)
+			}
+			req.Header.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36")
+			if resp, err = http.DefaultClient.Do(req); err != nil {
+				t.Errorf("blog post %s: external url %q: %+v", post.Slug, url, err)
+			} else if resp.StatusCode != http.StatusOK {
+				t.Errorf("blog post %s: external url %q: got status code %d; want %d", post.Slug, url, resp.StatusCode, http.StatusOK)
 			}
 		}
 	}

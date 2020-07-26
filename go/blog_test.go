@@ -126,8 +126,7 @@ func TestInternalLinks(t *testing.T) {
 	hrefRe := regexp.MustCompile(`<a [^>]*href=['"]([^'"]+)['"][^>]*>`)
 	var url string
 	for _, post := range posts {
-		submatches := hrefRe.FindAllStringSubmatch(string(post.Body), -1)
-		for _, submatch := range submatches {
+		for _, submatch := range hrefRe.FindAllStringSubmatch(string(post.Body), -1) {
 			url = submatch[1]
 			if url[0] != '/' {
 				continue
@@ -143,8 +142,8 @@ func TestInternalLinks(t *testing.T) {
 	}
 }
 
-// TestImages ensures that all <img> sources within blog posts yield 200 responses.
-func TestImages(t *testing.T) {
+// TestImageLinks ensures that all <img> sources within blog posts yield 200 responses.
+func TestImageLinks(t *testing.T) {
 	srv, err := NewServer()
 	if err != nil {
 		t.Fatal(err)
@@ -158,8 +157,7 @@ func TestImages(t *testing.T) {
 	srcRe := regexp.MustCompile(`<img [^>]*src=['"]([^'"]+)['"][^>]*>`)
 	var url string
 	for _, post := range posts {
-		submatches := srcRe.FindAllStringSubmatch(string(post.Body), -1)
-		for _, submatch := range submatches {
+		for _, submatch := range srcRe.FindAllStringSubmatch(string(post.Body), -1) {
 			url = submatch[1]
 			if url[0] != '/' {
 				t.Errorf("blog post %s: image url %q: externally hosted, which is dangerous", post.Slug, url)
@@ -171,6 +169,28 @@ func TestImages(t *testing.T) {
 			srv.ServeHTTP(w, r)
 			if w.Result().StatusCode != http.StatusOK {
 				t.Errorf("blog post %s: image url %q: got status code %d; want %d", post.Slug, url, w.Result().StatusCode, http.StatusOK)
+			}
+		}
+	}
+}
+
+// TestImagesHaveAlts ensures that all <img> tags have alt-text.
+func TestImagesHaveAlts(t *testing.T) {
+	srv, err := NewServer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	posts, err := LoadBlogPosts(srv.BlogRoot())
+	if err != nil {
+		t.Fatal(err)
+	}
+	srv.BlogPosts = posts
+	srv.SetupRoutes()
+	altRe := regexp.MustCompile(`<img[^>]*(alt="[^"]+")[^>]*>`)
+	for _, post := range posts {
+		for _, submatch := range altRe.FindAllStringSubmatch(string(post.Body), -1) {
+			if len(submatch[1]) == 0 {
+				t.Errorf("blog post %s: image tag %s has no attribute 'alt'", post.Slug, submatch[0])
 			}
 		}
 	}
@@ -189,8 +209,7 @@ func TestExternalLinks(t *testing.T) {
 	hrefRe := regexp.MustCompile(`<a [^>]*href=['"]([^'"]+)['"][^>]*>`)
 	var url string
 	for _, post := range posts {
-		submatches := hrefRe.FindAllStringSubmatch(string(post.Body), -1)
-		for _, submatch := range submatches {
+		for _, submatch := range hrefRe.FindAllStringSubmatch(string(post.Body), -1) {
 			url = submatch[1]
 			if url[0] == '/' {
 				continue

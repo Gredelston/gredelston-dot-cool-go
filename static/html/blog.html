@@ -1,5 +1,6 @@
 {{/* Template to render a blog post.*/}}
 {{template "header" . -}}
+<article id="blogpost">
 <h1>{{.BlogData.Title}}</h1>
 <hr>
 <i>Originally posted on {{.BlogData.PostedDate}}</i>
@@ -7,4 +8,5 @@
 {{.BlogData.Body}}
 <hr>
 Tags: {{range .BlogData.Tags}}{{.}}{{end}}
+</article>
 {{- template "footer"}}

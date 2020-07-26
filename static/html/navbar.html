@@ -1,20 +1,22 @@
 {{define "navbar" -}}
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-	<a class="navbar-brand" href="/">Gredelston</a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+	<div id="nav-items-container" class="container">
+		<a class="navbar-brand" href="/">Gredelston</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav mr-auto">
-			{{range .Navs}}
-			<li class="nav-item {{if .Active}}active{{end}}">
-				<a class="nav-link" href="{{.HRef}}">
-					{{- .Text -}}
-					{{- if .Active}}<span class="sr-only"> (current)</span>{{end -}}
-				</a>
-			{{end}}
-		</ul>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				{{range .Navs}}
+				<li class="nav-item {{if .Active}}active{{end}}">
+					<a class="nav-link" href="{{.HRef}}">
+						{{- .Text -}}
+						{{- if .Active}}<span class="sr-only"> (current)</span>{{end -}}
+					</a>
+				{{end}}
+			</ul>
+		</div>
 	</div>
 </nav>
 {{- end}}

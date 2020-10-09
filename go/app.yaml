@@ -1,0 +1,7 @@
+runtime: go113
+
+env_variables:
+        GOPATH: /home/gredelston/gopath/
+        SITEROOT: /home/gredelston/gredelston-dot-cool-go
+
+entrypoint: go run .

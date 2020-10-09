@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -22,6 +23,9 @@ func NewServer() (*Server, error) {
 	if os.Getenv("SITEROOT") == "" {
 		if err := godotenv.Load(); err != nil {
 			return nil, fmt.Errorf("loading .env: %+v", err)
+		}
+		if os.Getenv("SITEROOT") == "" {
+			return nil, errors.New("SITEROOT envvar still unset after loading .env")
 		}
 	}
 
@@ -96,7 +100,7 @@ func (s *Server) TemplateFile(name string) string {
 	if exists, err := s.FullPathExists(fp); err != nil {
 		panic(err)
 	} else if !exists {
-		panic(fmt.Sprintf("HTML template file %q not found", name))
+		panic(fmt.Sprintf("HTML template file %q not found at path %q", name, fp))
 	}
 	return fp
 }

@@ -27,6 +27,7 @@ func run() error {
 	}
 	s.SetupRoutes()
 
+	log.Printf(fmt.Sprintf("Listening on port %d", s.Port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.Port), s))
 	return nil
 }

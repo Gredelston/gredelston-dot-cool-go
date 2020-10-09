@@ -11,8 +11,8 @@ func (s *Server) SetupRoutes() {
 	s.Router.GET("/", s.HandleIndex)
 	s.Router.GET("/about", s.HandleAbout)
 	s.Router.GET("/blog/:slug", s.HandleBlogPost)
-	s.Router.ServeFiles("/css/*filepath", http.Dir(utils.StaticPath("css")))
-	s.Router.ServeFiles("/images/*filepath", http.Dir(utils.StaticPath("images")))
+	s.Router.ServeFiles("/css/*filepath", http.Dir(utils.Asset("css")))
+	s.Router.ServeFiles("/images/*filepath", http.Dir(utils.Asset("images")))
 	s.Router.PanicHandler = s.RenderError
 }
 

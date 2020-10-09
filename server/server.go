@@ -61,7 +61,7 @@ func (s *Server) TemplateFile(name string) string {
 	if !ok {
 		utils.Panicf("invalid template name: %s", name)
 	}
-	fp := utils.StaticPath("html", basename)
+	fp := utils.Asset("html", basename)
 	if exists, err := utils.PathExists(fp); err != nil {
 		panic(err)
 	} else if !exists {
@@ -72,5 +72,5 @@ func (s *Server) TemplateFile(name string) string {
 
 // BlogRoot returns the full path to the directory containing all blog files.
 func (s *Server) BlogRoot() string {
-	return utils.StaticPath("blog")
+	return utils.Asset("blog")
 }

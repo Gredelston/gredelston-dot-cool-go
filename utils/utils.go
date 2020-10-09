@@ -22,27 +22,27 @@ func PathExists(fp string) (bool, error) {
 	return false, err
 }
 
-var cachedStaticRoot string
+var cachedAssetsRoot string
 
-// staticRoot finds the directory containing project's static files.
-func staticRoot() string {
-	if cachedStaticRoot != "" {
-		return cachedStaticRoot
+// assetsRoot finds the directory containing project's assets.
+func assetsRoot() string {
+	if cachedAssetsRoot != "" {
+		return cachedAssetsRoot
 	}
 	var attempted []string
 	for _, gopath := range strings.Split(os.Getenv("GOPATH"), ":") {
-		d := filepath.Join(gopath, "src", "github.com", GitUserName, ProjectName, "static")
+		d := filepath.Join(gopath, "src", "github.com", GitUserName, ProjectName, "assets")
 		if _, err := os.Stat(d); !os.IsNotExist(err) {
-			cachedStaticRoot = d
-			return cachedStaticRoot
+			cachedAssetsRoot = d
+			return cachedAssetsRoot
 		}
 		attempted = append(attempted, d)
 	}
-	Panicf("static dir not found for gopath=%q; attempted %+v", os.Getenv("GOPATH"), attempted)
+	Panicf("Assets dir not found for gopath=%q; attempted %+v", os.Getenv("GOPATH"), attempted)
 	return ""
 }
 
-// StaticPath finds the path to a specified static file or directory.
-func StaticPath(elem ...string) string {
-	return filepath.Join(append([]string{staticRoot()}, elem...)...)
+// Asset finds the path to a specified assets file or directory.
+func Asset(elem ...string) string {
+	return filepath.Join(append([]string{assetsRoot()}, elem...)...)
 }

@@ -4,13 +4,13 @@ import (
 	"testing"
 )
 
-// Ensures that staticRoot points to a real filepath.
-func TestStaticRootExists(t *testing.T) {
-	if staticRoot() == "" {
-		t.Fatal("Static root not found")
+// Ensure that assetsRoot points to a real filepath.
+func TestAssetsRootExists(t *testing.T) {
+	if assetsRoot() == "" {
+		t.Fatal("Assets root not found")
 	}
 	// Check that it caches correctly
-	if cachedStaticRoot == "" {
-		t.Fatal("Static root did not cache")
+	if cachedAssetsRoot == "" {
+		t.Fatal("Assets root did not cache")
 	}
 }

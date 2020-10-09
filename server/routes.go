@@ -1,19 +1,29 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gredelston/gredelston-dot-cool-go/utils"
 	"github.com/julienschmidt/httprouter"
 )
 
-func (s *Server) SetupRoutes() {
+func (s *Server) SetupRoutes() error {
 	s.Router.GET("/", s.HandleIndex)
 	s.Router.GET("/about", s.HandleAbout)
 	s.Router.GET("/blog/:slug", s.HandleBlogPost)
-	s.Router.ServeFiles("/css/*filepath", http.Dir(utils.Asset("css")))
-	s.Router.ServeFiles("/images/*filepath", http.Dir(utils.Asset("images")))
+	css, err := utils.Asset("css")
+	if err != nil {
+		return fmt.Errorf("getting css path: %+v", err)
+	}
+	s.Router.ServeFiles("/css/*filepath", http.Dir(css))
+	images, err := utils.Asset("images")
+	if err != nil {
+		return fmt.Errorf("getting images path: %+v", err)
+	}
+	s.Router.ServeFiles("/images/*filepath", http.Dir(images))
 	s.Router.PanicHandler = s.RenderError
+	return nil
 }
 
 // HandleIndex defines a GET method to handle / routes.

@@ -43,7 +43,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // LoadData initializes any data that the server will depend on.
 func (s *Server) LoadData() error {
 	// Blog posts
-	posts, err := LoadBlogPosts(s.BlogRoot())
+	br, err := s.BlogRoot()
+	if err != nil {
+		return err
+	}
+	posts, err := LoadBlogPosts(br)
 	if err != nil {
 		return fmt.Errorf("loading blog data: %+v", err)
 	}
@@ -56,21 +60,37 @@ func (s *Server) LoadData() error {
 }
 
 // TemplateFile returns the full path to the named HTML template.
-func (s *Server) TemplateFile(name string) string {
+func (s *Server) TemplateFile(name string) (string, error) {
 	basename, ok := s.templateFiles[name]
 	if !ok {
-		utils.Panicf("invalid template name: %s", name)
+		return "", fmt.Errorf("invalid template name: %s", name)
 	}
-	fp := utils.Asset("html", basename)
-	if exists, err := utils.PathExists(fp); err != nil {
-		panic(err)
+	htmlFP, err := utils.Asset("html", basename)
+	if err != nil {
+		return "", fmt.Errorf("determining asset path for html/%s: %+v", basename, err)
+	}
+	if exists, err := utils.PathExists(htmlFP); err != nil {
+		return "", err
 	} else if !exists {
-		panic(fmt.Sprintf("HTML template file %q not found at path %q", name, fp))
+		return "", fmt.Errorf("HTML template file %q not found at path %q", name, htmlFP)
+	}
+	return htmlFP, nil
+}
+
+// TemplateMustExist returns the full path to the named HTML template, or panics if it doesn't exist.
+func (s *Server) TemplateMustExist(name string) string {
+	fp, err := s.TemplateFile(name)
+	if err != nil {
+		panic(err)
 	}
 	return fp
 }
 
 // BlogRoot returns the full path to the directory containing all blog files.
-func (s *Server) BlogRoot() string {
-	return utils.Asset("blog")
+func (s *Server) BlogRoot() (string, error) {
+	br, err := utils.Asset("blog")
+	if err != nil {
+		return "", fmt.Errorf("determining blog root: %+v", err)
+	}
+	return br, nil
 }

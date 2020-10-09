@@ -19,7 +19,10 @@ func TestBlogRootExists(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	blogRoot := s.BlogRoot()
+	blogRoot, err := s.BlogRoot()
+	if err != nil {
+		t.Fatal(err)
+	}
 	if exists, err := utils.PathExists(blogRoot); err != nil {
 		t.Fatal(err)
 	} else if !exists {
@@ -77,7 +80,10 @@ func TestAllBlogPostsHaveIndexHTML(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	blogRoot := s.BlogRoot()
+	blogRoot, err := s.BlogRoot()
+	if err != nil {
+		t.Fatal(err)
+	}
 	blogDirs, err := allDirsWithin(blogRoot)
 	if err != nil {
 		t.Fatal(err)
@@ -98,7 +104,10 @@ func TestAllBlogPostsHaveMetaJSON(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	blogRoot := s.BlogRoot()
+	blogRoot, err := s.BlogRoot()
+	if err != nil {
+		t.Fatal(err)
+	}
 	blogDirs, err := allDirsWithin(blogRoot)
 	if err != nil {
 		t.Fatal(err)
@@ -115,16 +124,20 @@ func TestAllBlogPostsHaveMetaJSON(t *testing.T) {
 
 // TestInternalLinks ensures that all INTERNAL links within blog posts yield 200 responses.
 func TestInternalLinks(t *testing.T) {
-	srv, err := NewServer()
+	s, err := NewServer()
 	if err != nil {
 		t.Fatal(err)
 	}
-	posts, err := LoadBlogPosts(srv.BlogRoot())
+	blogRoot, err := s.BlogRoot()
 	if err != nil {
 		t.Fatal(err)
 	}
-	srv.BlogPosts = posts
-	srv.Router.GET("/blog/:slug", srv.HandleBlogPost)
+	posts, err := LoadBlogPosts(blogRoot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.BlogPosts = posts
+	s.Router.GET("/blog/:slug", s.HandleBlogPost)
 	hrefRe := regexp.MustCompile(`<a [^>]*href=['"]([^'"]+)['"][^>]*>`)
 	var url string
 	for _, post := range posts {
@@ -133,10 +146,10 @@ func TestInternalLinks(t *testing.T) {
 			if url[0] != '/' {
 				continue
 			}
-			url = fmt.Sprintf("http://localhost:%d%s", srv.Port, url)
+			url = fmt.Sprintf("http://localhost:%d%s", s.Port, url)
 			r := httptest.NewRequest("GET", url, nil)
 			w := httptest.NewRecorder()
-			srv.ServeHTTP(w, r)
+			s.ServeHTTP(w, r)
 			if w.Result().StatusCode != http.StatusOK {
 				t.Errorf("blog post %s: internal url %q: got status code %d; want %d", post.Slug, url, w.Result().StatusCode, http.StatusOK)
 			}
@@ -146,16 +159,20 @@ func TestInternalLinks(t *testing.T) {
 
 // TestImageLinks ensures that all <img> sources within blog posts yield 200 responses.
 func TestImageLinks(t *testing.T) {
-	srv, err := NewServer()
+	s, err := NewServer()
 	if err != nil {
 		t.Fatal(err)
 	}
-	posts, err := LoadBlogPosts(srv.BlogRoot())
+	blogRoot, err := s.BlogRoot()
 	if err != nil {
 		t.Fatal(err)
 	}
-	srv.BlogPosts = posts
-	srv.SetupRoutes()
+	posts, err := LoadBlogPosts(blogRoot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.BlogPosts = posts
+	s.SetupRoutes()
 	srcRe := regexp.MustCompile(`<img [^>]*src=['"]([^'"]+)['"][^>]*>`)
 	var url string
 	for _, post := range posts {
@@ -165,10 +182,10 @@ func TestImageLinks(t *testing.T) {
 				t.Errorf("blog post %s: image url %q: externally hosted, which is dangerous", post.Slug, url)
 				continue
 			}
-			url = fmt.Sprintf("http://localhost:%d%s", srv.Port, url)
+			url = fmt.Sprintf("http://localhost:%d%s", s.Port, url)
 			r := httptest.NewRequest("GET", url, nil)
 			w := httptest.NewRecorder()
-			srv.ServeHTTP(w, r)
+			s.ServeHTTP(w, r)
 			if w.Result().StatusCode != http.StatusOK {
 				t.Errorf("blog post %s: image url %q: got status code %d; want %d", post.Slug, url, w.Result().StatusCode, http.StatusOK)
 			}
@@ -178,16 +195,20 @@ func TestImageLinks(t *testing.T) {
 
 // TestImagesHaveAlts ensures that all <img> tags have alt-text.
 func TestImagesHaveAlts(t *testing.T) {
-	srv, err := NewServer()
+	s, err := NewServer()
 	if err != nil {
 		t.Fatal(err)
 	}
-	posts, err := LoadBlogPosts(srv.BlogRoot())
+	blogRoot, err := s.BlogRoot()
 	if err != nil {
 		t.Fatal(err)
 	}
-	srv.BlogPosts = posts
-	srv.SetupRoutes()
+	posts, err := LoadBlogPosts(blogRoot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.BlogPosts = posts
+	s.SetupRoutes()
 	altRe := regexp.MustCompile(`<img[^>]*(alt="[^"]+")[^>]*>`)
 	for _, post := range posts {
 		for _, submatch := range altRe.FindAllStringSubmatch(string(post.Body), -1) {
@@ -200,11 +221,15 @@ func TestImagesHaveAlts(t *testing.T) {
 
 // TestExternalLinks ensures that all EXTERNAL links within blog posts yield 200 responses.
 func TestExternalLinks(t *testing.T) {
-	srv, err := NewServer()
+	s, err := NewServer()
 	if err != nil {
 		t.Fatal(err)
 	}
-	posts, err := LoadBlogPosts(srv.BlogRoot())
+	blogRoot, err := s.BlogRoot()
+	if err != nil {
+		t.Fatal(err)
+	}
+	posts, err := LoadBlogPosts(blogRoot)
 	if err != nil {
 		t.Fatal(err)
 	}

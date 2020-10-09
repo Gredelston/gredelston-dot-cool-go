@@ -32,9 +32,9 @@ func (s *Server) RenderPage(name string, w http.ResponseWriter, data PageData) {
 	if len(data.Navs) == 0 {
 		data.Navs = NewNavs()
 	}
-	mainFP := s.TemplateFile(name)
+	mainFP := s.TemplateMustExist(name)
 	t := template.New(path.Base(mainFP))
-	t = template.Must(t.ParseFiles(mainFP, s.TemplateFile("header"), s.TemplateFile("footer"), s.TemplateFile("navbar"), s.TemplateFile("blogroll")))
+	t = template.Must(t.ParseFiles(mainFP, s.TemplateMustExist("header"), s.TemplateMustExist("footer"), s.TemplateMustExist("navbar"), s.TemplateMustExist("blogroll")))
 	if err := t.Execute(w, data); err != nil {
 		panic(err)
 	}

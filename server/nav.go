@@ -1,4 +1,4 @@
-package main
+package server
 
 // Nav contains the data necessary to render a single element of the navbar.
 type Nav struct {

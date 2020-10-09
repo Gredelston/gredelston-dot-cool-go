@@ -5,10 +5,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-)
 
-// panicf formats s, and panics.
-func panicf(s string, i ...interface{}) { panic(fmt.Sprintf(s, i...)) }
+	"github.com/gredelston/gredelston-dot-cool-go/server"
+)
 
 // Main function, handles routing.
 func main() {
@@ -19,15 +18,15 @@ func main() {
 }
 
 func run() error {
-	server, err := NewServer()
+	s, err := server.NewServer()
 	if err != nil {
 		return fmt.Errorf("initializing server: %+v", err)
 	}
-	if err := server.LoadData(); err != nil {
+	if err := s.LoadData(); err != nil {
 		return fmt.Errorf("loading server data: %+v", err)
 	}
-	server.SetupRoutes()
+	s.SetupRoutes()
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", server.Port), server))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.Port), s))
 	return nil
 }

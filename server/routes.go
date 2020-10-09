@@ -1,8 +1,9 @@
-package main
+package server
 
 import (
 	"net/http"
 
+	"github.com/gredelston/gredelston-dot-cool-go/utils"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -10,8 +11,8 @@ func (s *Server) SetupRoutes() {
 	s.Router.GET("/", s.HandleIndex)
 	s.Router.GET("/about", s.HandleAbout)
 	s.Router.GET("/blog/:slug", s.HandleBlogPost)
-	s.Router.ServeFiles("/css/*filepath", http.Dir(s.FullPath("static/css")))
-	s.Router.ServeFiles("/images/*filepath", http.Dir(s.FullPath("static/images")))
+	s.Router.ServeFiles("/css/*filepath", http.Dir(utils.StaticPath("css")))
+	s.Router.ServeFiles("/images/*filepath", http.Dir(utils.StaticPath("images")))
 	s.Router.PanicHandler = s.RenderError
 }
 
@@ -40,7 +41,7 @@ func (s *Server) HandleBlogPost(w http.ResponseWriter, r *http.Request, ps httpr
 	slug := ps.ByName("slug")
 	bp, ok := s.BlogPostBySlug(slug)
 	if !ok {
-		panicf("no blog post found for slug %s", slug)
+		utils.Panicf("no blog post found for slug %s", slug)
 	}
 	title := bp.Slug
 	s.RenderPage("blog", w, PageData{

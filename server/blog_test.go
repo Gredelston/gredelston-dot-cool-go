@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -10,6 +10,8 @@ import (
 	"reflect"
 	"regexp"
 	"testing"
+
+	"github.com/gredelston/gredelston-dot-cool-go/utils"
 )
 
 func TestBlogRootExists(t *testing.T) {
@@ -18,7 +20,7 @@ func TestBlogRootExists(t *testing.T) {
 		t.Fatal(err)
 	}
 	blogRoot := s.BlogRoot()
-	if exists, err := s.FullPathExists(blogRoot); err != nil {
+	if exists, err := utils.PathExists(blogRoot); err != nil {
 		t.Fatal(err)
 	} else if !exists {
 		t.Errorf("Blog root %q not present on server", blogRoot)
@@ -82,7 +84,7 @@ func TestAllBlogPostsHaveIndexHTML(t *testing.T) {
 	}
 	for _, dir := range blogDirs {
 		indexPath := filepath.Join(dir, "index.html")
-		if exists, err := s.FullPathExists(indexPath); err != nil {
+		if exists, err := utils.PathExists(indexPath); err != nil {
 			t.Fatalf("Failed to determine whether blog post %s has an index.html: %+v", filepath.Base(dir), err)
 		} else if !exists {
 			t.Errorf("Blog post %s has no index.html", filepath.Base(dir))
@@ -103,7 +105,7 @@ func TestAllBlogPostsHaveMetaJSON(t *testing.T) {
 	}
 	for _, dir := range blogDirs {
 		metaPath := filepath.Join(dir, "meta.json")
-		if exists, err := s.FullPathExists(metaPath); err != nil {
+		if exists, err := utils.PathExists(metaPath); err != nil {
 			t.Fatalf("Failed to determine whether blog post %s has an meta.json: %+v", filepath.Base(dir), err)
 		} else if !exists {
 			t.Errorf("Blog post %s has no meta.json", filepath.Base(dir))

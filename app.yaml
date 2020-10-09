@@ -1,0 +1,6 @@
+runtime: go113
+
+env_variables:
+        GOPATH: /home/gredelston/go/
+
+#entrypoint: ${HOME}/go/bin/gredelston-dot-cool-go

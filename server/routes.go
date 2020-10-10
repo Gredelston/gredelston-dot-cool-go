@@ -11,6 +11,7 @@ import (
 func (s *Server) SetupRoutes() error {
 	s.Router.GET("/", s.HandleIndex)
 	s.Router.GET("/about", s.HandleAbout)
+	s.Router.GET("/now", s.HandleNow)
 	s.Router.GET("/blog/:slug", s.HandleBlogPost)
 	css, err := utils.Asset("css")
 	if err != nil {
@@ -26,7 +27,7 @@ func (s *Server) SetupRoutes() error {
 	return nil
 }
 
-// HandleIndex defines a GET method to handle / routes.
+// HandleIndex routes / to the index.html template.
 func (s *Server) HandleIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	s.RenderPage("index", w, PageData{
 		Title:            "Home",
@@ -36,7 +37,16 @@ func (s *Server) HandleIndex(w http.ResponseWriter, r *http.Request, _ httproute
 	})
 }
 
-// HandleAbout defines a GET method to handle /about routes.
+// HandleNow routes /now to the now.html template.
+func (s *Server) HandleNow(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	s.RenderPage("now", w, PageData{
+		Title:    "Now",
+		Navs:     NewNavsWithActive(NavNow),
+		Keywords: []string{"now"},
+	})
+}
+
+// HandleAbout routes /about to a simple Text page.
 func (s *Server) HandleAbout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	s.RenderPage("text", w, PageData{
 		Title:    "About Me",

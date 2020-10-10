@@ -32,6 +32,7 @@ func NewServer() (*Server, error) {
 			"blogroll": "blogroll.html",
 			"index":    "index.html",
 			"text":     "text.html",
+			"now":      "now.html",
 		},
 	}, nil
 }

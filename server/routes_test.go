@@ -15,7 +15,7 @@ func TestStandalonePages(t *testing.T) {
 	}
 	srv.SetupRoutes()
 	base := fmt.Sprintf("http://localhost:%d", srv.Port)
-	for _, route := range []string{"/", "/about"} {
+	for _, route := range []string{"/", "/about", "/now"} {
 		url := fmt.Sprintf("%s%s", base, route)
 		r := httptest.NewRequest("GET", url, nil)
 		w := httptest.NewRecorder()

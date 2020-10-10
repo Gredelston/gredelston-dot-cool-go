@@ -12,11 +12,12 @@ type Nav struct {
 var (
 	NavHome  = Nav{Text: "Home", HRef: "/"}
 	NavAbout = Nav{Text: "About Me", HRef: "/about"}
+	NavNow   = Nav{Text: "Now", HRef: "/now"}
 )
 
 // NewNavs returns the standard array of Navs.
 func NewNavs() []Nav {
-	return []Nav{NavHome, NavAbout}
+	return []Nav{NavHome, NavAbout, NavNow}
 }
 
 // NewNavsWithActive returns the standard array of Navs, with one set as Active.
